@@ -46,12 +46,12 @@ private:
     }
 
 public:
-    static uint16_t calculateCRC(const std::vector<unsigned char> &data)
+    static uint16_t calculateCRC(std::vector<unsigned char> &data)
     {
         return CRC16::calculateCRC(data.data(), data.size());
     }
 
-    static uint16_t calculateCRC(const uint8_t *data, size_t size)
+    static uint16_t calculateCRC(void *data, size_t size)
     {
         if (!crcTableInitialized())
         {
@@ -60,7 +60,7 @@ public:
         uint16_t crc = 0xFFFF;
         for (size_t i = 0; i < size; ++i)
         {
-            crc = (crc >> 8) ^ crcTableValue((crc ^ data[i]) & 0xFF);
+            crc = (crc >> 8) ^ crcTableValue((crc ^ ((uint8_t *)data)[i]) & 0xFF);
         }
         return crc;
     }
